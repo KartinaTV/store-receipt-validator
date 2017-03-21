@@ -1,6 +1,6 @@
 {
-  "name": "aporat/store-receipt-validator",
-  "description": "PHP receipt validator for Apple iTunes, Google Play and Amazon App Store Edit",
+  "name": "sapfeer0k/store-receipt-validator",
+  "description": "PHP receipt validator for Apple iTunes, Google Play, Amazon App Store and Windows Store",
   "type": "library",
   "authors": [
     {
@@ -12,16 +12,25 @@
       "name": "Stanimir Kukudov",
       "email": "stanimir.kukudov@gmail.com",
       "homepage": "https://github.com/stanimir-kukudov"
+    },
+    {
+      "name": "Sergei Lomakov",
+      "email": "sergei@lomakov.net",
+      "homepage": "https://github.com/sapfeer0k"
     }
   ],
   "keywords": [
     "itunes",
     "apple",
+    "amazon",
+    "google",
+    "play market",
+    "windows store",
     "in app",
     "purchase",
     "receipt"
   ],
-  "homepage": "https://github.com/aporat/store-receipt-validator",
+  "homepage": "https://github.com/KartinaTV/store-receipt-validator",
   "license": [
     "Apache-2.0"
   ],
@@ -42,6 +51,6 @@
     }
   },
   "support": {
-    "issues": "https://github.com/aporat/store-receipt-validator/issues"
+    "issues": "https://github.com/KartinaTV/store-receipt-validator/issues"
   }
 }

@@ -1,7 +1,7 @@
 store-receipt-validator
 =======
 
-[![Build Status](https://travis-ci.org/KartinaTV/store-receipt-validator.png?branch=master)](https://travis-ci.org/KartinaTV/store-receipt-validator)
+[![Build Status](https://travis-ci.org/KartinaTV/store-receipt-validator.svg?branch=master)](https://travis-ci.org/KartinaTV/store-receipt-validator.svg?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/KartinaTV/store-receipt-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/KartinaTV/store-receipt-validator/badges/quality-score.png?b=master)
 
 PHP library that can be used to validate Amazon Store, Google Play, iTunes and Windows Store in app purchase receipts.

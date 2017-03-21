@@ -1,13 +1,10 @@
 store-receipt-validator
 =======
 
-[![Latest Stable Version](https://poser.pugx.org/aporat/store-receipt-validator/version.png)](https://packagist.org/packages/aporat/store-receipt-validator) [![Composer Downloads](https://poser.pugx.org/aporat/store-receipt-validator/d/total.png)](https://packagist.org/packages/aporat/store-receipt-validator)
 [![Build Status](https://travis-ci.org/aporat/store-receipt-validator.png?branch=master)](https://travis-ci.org/aporat/store-receipt-validator)
-[![Code Coverage](https://scrutinizer-ci.com/g/aporat/store-receipt-validator/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/aporat/store-receipt-validator/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/aporat/store-receipt-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/aporat/store-receipt-validator/?branch=master)
-[![License](https://poser.pugx.org/aporat/store-receipt-validator/license.svg)](https://packagist.org/packages/aporat/store-receipt-validator)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/KartinaTV/store-receipt-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/KartinaTV/store-receipt-validator/badges/quality-score.png?b=master)
 
-PHP library that can be used to validate base64 encoded iTunes in app purchase receipts.
+PHP library that can be used to validate Amazon Store, Google Play, iTunes and Windows Store in app purchase receipts.
 
 
 ## Requirements ##
@@ -27,7 +24,7 @@ If you're not familiar with Composer, please see <http://getcomposer.org/>.
         {
             ...
             "require": {
-                "aporat/store-receipt-validator": "dev-master"
+                "kartina-tv/store-receipt-validator": "2.*"
             },
             ...
         }
@@ -69,15 +66,18 @@ if ($response->isValid()) {
 
 ### Play Store ###
 
-Get the refresh token from [OAuth2 flow](https://developers.google.com/android-publisher/authorization).
+Create service account [Service Account flow](https://developers.google.com/identity/protocols/OAuth2ServiceAccount)
+and download credentials json file
+
+Give it permission in Google Play Console for your Application
 
 ```php
 use ReceiptValidator\GooglePlay\Validator as PlayValidator;
 
+putenv('GOOGLE_APPLICATION_CREDENTIALS=path/to/credentials.json');
 $client = new \Google_Client();
-$client->setApplicationName('...');
-$client->setAuthConfig('...');
-$client->setScopes('...');
+$client->useApplicationDefaultCredentials();
+$client->setScopes(Google_Service_AndroidPublisher::ANDROIDPUBLISHER);
 
 $validator = new PlayValidator(new \Google_Service_AndroidPublisher($client));
 
@@ -92,30 +92,6 @@ try {
 }
 // success
 ```
-
-Or [Using a service account](https://developers.google.com/android-publisher/getting_started#using_a_service_account)
-
-Create service account [Service Account flow](https://developers.google.com/identity/protocols/OAuth2ServiceAccount)
-
-```php
-use ReceiptValidator\GooglePlay\ServiceAccountValidator as PlayValidator;
-$validator = new PlayValidator([
-    'client_email' => 'xxxxxx@developer.gserviceaccount.com',
-    'p12_key_path' => 'MyProject.p12',
-]);
-
-try {
-  $response = $validator->setPackageName('PACKAGE_NAME')
-    ->setProductId('PRODUCT_ID')
-    ->setPurchaseToken('PURCHASE_TOKEN')
-    ->validate();
-} catch (Exception $e){
-  var_dump($e->getMessage());
-  // example message: Error calling GET ....: (404) Product not found for this application.
-}
-// success
-```
-
 
 ### Amazon App Store ###
 
@@ -133,7 +109,7 @@ try {
   echo 'got error = ' . $e->getMessage() . PHP_EOL;
 }
 
-if ($response instanceof ValidatorResponse && $response->isValid()) {
+if ($response->isValid()) {
 
   echo 'Receipt is valid.' . PHP_EOL;
 

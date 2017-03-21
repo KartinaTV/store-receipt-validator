@@ -41,7 +41,9 @@ class Validator extends AbstractValidator
         // Retrieve the certificate from the official site.
         $certificate = $this->retrieveCertificate($certificateId);
 
-        return $this->validateXml($dom, $certificate);
+        $isValid = $this->validateXml($dom, $certificate);
+        $response = Response::factory($dom, $isValid);
+        return $response;
     }
 
     /**

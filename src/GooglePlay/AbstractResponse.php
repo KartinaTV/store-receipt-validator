@@ -6,7 +6,7 @@ namespace ReceiptValidator\GooglePlay;
  * Class AbstractResponse
  * @package ReceiptValidator\GooglePlay
  */
-abstract class AbstractResponse
+abstract class AbstractResponse extends \ReceiptValidator\Abstracts\AbstractResponse
 {
     const CONSUMPTION_STATE_YET_TO_BE_CONSUMED = 0;
     const CONSUMPTION_STATE_CONSUMED = 1;
@@ -81,5 +81,10 @@ abstract class AbstractResponse
     public function getRawResponse()
     {
         return $this->response;
+    }
+
+    public function isValid()
+    {
+        return true;
     }
 }

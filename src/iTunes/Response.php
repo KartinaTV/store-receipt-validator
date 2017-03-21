@@ -1,9 +1,10 @@
 <?php
 namespace ReceiptValidator\iTunes;
 
+use ReceiptValidator\Abstracts\AbstractResponse;
 use ReceiptValidator\RunTimeException;
 
-class Response
+class Response extends AbstractResponse
 {
     /**
      * Response Codes
@@ -240,3 +241,4 @@ class Response
         return ($this->code == self::RESULT_OK);
     }
 }
+

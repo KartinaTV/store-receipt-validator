@@ -3,6 +3,7 @@ namespace ReceiptValidator\iTunes;
 
 use GuzzleHttp\Client as HttpClient;
 use ReceiptValidator\Abstracts\AbstractValidator;
+use ReceiptValidator\Interfaces\IResponse;
 use ReceiptValidator\RunTimeException;
 
 class Validator extends AbstractValidator

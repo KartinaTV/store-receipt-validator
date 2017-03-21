@@ -1,9 +1,10 @@
 <?php
 namespace ReceiptValidator\Amazon;
 
+use ReceiptValidator\Abstracts\AbstractResponse;
 use ReceiptValidator\RunTimeException;
 
-class Response
+class Response extends AbstractResponse
 {
   /**
    * Response Codes
@@ -31,14 +32,6 @@ class Response
    * @var int
    */
     protected $code;
-
-
-  /**
-   * receipt info
-   *
-   * @var array
-   */
-    protected $receipt = [];
 
   /**
    * purchases info
@@ -72,16 +65,6 @@ class Response
     }
 
   /**
-   * Get receipt info
-   *
-   * @return array
-   */
-    public function getReceipt()
-    {
-        return $this->receipt;
-    }
-
-  /**
    * Get purchases info
    *
    * @return PurchaseItem[]
@@ -92,7 +75,7 @@ class Response
     }
 
   /**
-   * returns if the receipt is valid or not
+   * returns if the purchase is valid or not
    *
    * @return boolean
    */
@@ -108,20 +91,20 @@ class Response
   /**
    * Parse JSON Response
    *
-   * @param string $jsonResponse
+   * @param string $responseData
    *
    * @throws RunTimeException
    * @return $this
    */
-    public function parseJsonResponse($jsonResponse = null)
+    public function parseJsonResponse($responseData = null)
     {
-        if (!is_array($jsonResponse)) {
-            throw new RuntimeException('Response must be a scalar value');
+        if (!is_array($responseData)) {
+            throw new RunTimeException('Response must be a scalar value');
         }
 
-        $this->receipt = $jsonResponse;
+        $this->response = $responseData;
         $this->purchases = [];
-        $this->purchases[] = new PurchaseItem($jsonResponse);
+        $this->purchases[] = new PurchaseItem($responseData);
 
         return $this;
     }

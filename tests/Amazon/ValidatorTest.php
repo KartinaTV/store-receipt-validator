@@ -11,26 +11,26 @@ class AmazonValidatorTest extends PHPUnit_Framework_TestCase
   /**
    * @var AmazonValidator
    */
-  private $validator;
+    private $validator;
 
-  public function setUp()
-  {
-    parent::setUp();
+    public function setUp()
+    {
+        parent::setUp();
 
-    $this->validator = new AmazonValidator();
-  }
+        $this->validator = new AmazonValidator();
+    }
 
-  public function testSetEndpoint()
-  {
-    $this->validator->setDeveloperSecret('SECRET');
+    public function testSetEndpoint()
+    {
+        $this->validator->setDeveloperSecret('SECRET');
 
-    $this->assertEquals('SECRET', $this->validator->getDeveloperSecret());
-  }
+        $this->assertEquals('SECRET', $this->validator->getDeveloperSecret());
+    }
 
-  public function testValidateWithNoReceiptData()
-  {
-    $response = $this->validator->setDeveloperSecret("NA")->setReceiptId("ID")->setUserId("ID")->validate();
+    public function testValidateWithNoReceiptData()
+    {
+        $response = $this->validator->setDeveloperSecret("NA")->setPurchaseToken("ID")->setUserId("ID")->validate();
 
-    $this->assertFalse($response->isValid(), 'receipt must be invalid');
-  }
+        $this->assertFalse($response->isValid(), 'receipt must be invalid');
+    }
 }

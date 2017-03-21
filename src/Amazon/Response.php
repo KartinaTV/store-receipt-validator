@@ -10,19 +10,19 @@ class Response
    *
    * @var int
    */
-  const RESULT_OK = 200;
+    const RESULT_OK = 200;
 
   // Amazon RVS Error: Invalid receiptID
-  const RESULT_INVALID_RECEIPT = 400;
+    const RESULT_INVALID_RECEIPT = 400;
 
   // Amazon RVS Error: Invalid developerSecret
-  const RESULT_INVALID_DEVELOPER_SECRET = 496;
+    const RESULT_INVALID_DEVELOPER_SECRET = 496;
 
   // Amazon RVS Error: Invalid userId
-  const RESULT_INVALID_USER_ID = 497;
+    const RESULT_INVALID_USER_ID = 497;
 
   // Amazon RVS Error: Internal Server Error
-  const RESULT_INTERNAL_ERROR = 500;
+    const RESULT_INTERNAL_ERROR = 500;
 
 
   /**
@@ -30,7 +30,7 @@ class Response
    *
    * @var int
    */
-  protected $_code;
+    protected $code;
 
 
   /**
@@ -38,13 +38,13 @@ class Response
    *
    * @var array
    */
-  protected $_receipt = [];
+    protected $receipt = [];
 
   /**
    * purchases info
    * @var PurchaseItem[]
    */
-  protected $_purchases = [];
+    protected $purchases = [];
 
   /**
    * Constructor
@@ -52,58 +52,58 @@ class Response
    * @param int $httpStatusCode
    * @param array $jsonResponse
    */
-  public function __construct($httpStatusCode = 200, $jsonResponse = null)
-  {
-    $this->_code = $httpStatusCode;
+    public function __construct($httpStatusCode = 200, $jsonResponse = null)
+    {
+        $this->code = $httpStatusCode;
 
-    if ($jsonResponse !== null) {
-      $this->parseJsonResponse($jsonResponse);
+        if ($jsonResponse !== null) {
+            $this->parseJsonResponse($jsonResponse);
+        }
     }
-  }
 
   /**
    * Get Result Code
    *
    * @return int
    */
-  public function getResultCode()
-  {
-    return $this->_code;
-  }
+    public function getResultCode()
+    {
+        return $this->code;
+    }
 
   /**
    * Get receipt info
    *
    * @return array
    */
-  public function getReceipt()
-  {
-    return $this->_receipt;
-  }
+    public function getReceipt()
+    {
+        return $this->receipt;
+    }
 
   /**
    * Get purchases info
    *
    * @return PurchaseItem[]
    */
-  public function getPurchases()
-  {
-    return $this->_purchases;
-  }
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
 
   /**
    * returns if the receipt is valid or not
    *
    * @return boolean
    */
-  public function isValid()
-  {
-    if ($this->_code == self::RESULT_OK) {
-      return true;
-    }
+    public function isValid()
+    {
+        if ($this->code == self::RESULT_OK) {
+            return true;
+        }
 
-    return false;
-  }
+        return false;
+    }
 
   /**
    * Parse JSON Response
@@ -113,16 +113,16 @@ class Response
    * @throws RunTimeException
    * @return $this
    */
-  public function parseJsonResponse($jsonResponse = null)
-  {
-    if (!is_array($jsonResponse)) {
-      throw new RuntimeException('Response must be a scalar value');
+    public function parseJsonResponse($jsonResponse = null)
+    {
+        if (!is_array($jsonResponse)) {
+            throw new RuntimeException('Response must be a scalar value');
+        }
+
+        $this->receipt = $jsonResponse;
+        $this->purchases = [];
+        $this->purchases[] = new PurchaseItem($jsonResponse);
+
+        return $this;
     }
-
-    $this->_receipt = $jsonResponse;
-    $this->_purchases = [];
-    $this->_purchases[] = new PurchaseItem($jsonResponse);
-
-    return $this;
-  }
 }

@@ -11,13 +11,13 @@ class PurchaseResponse extends AbstractResponse
   /**
    * @var \Google_Service_AndroidPublisher_ProductPurchase
    */
-  protected $response;
+    protected $response;
 
   /**
    * @return string
    */
-  public function getPurchaseTimeMillis()
-  {
-    return $this->response->purchaseTimeMillis;
-  }
+    public function getPurchaseTimeMillis()
+    {
+        return $this->response->purchaseTimeMillis;
+    }
 }

@@ -12,103 +12,103 @@ class PurchaseItem
    *
    * @var array
    */
-  protected $_response;
+    protected $response;
 
   /**
    * quantity
    *
    * @var int
    */
-  protected $_quantity;
+    protected $quantity;
 
   /**
    * product_id
    *
    * @var string
    */
-  protected $_product_id;
+    protected $productId;
 
   /**
    * transaction_id
    *
    * @var string
    */
-  protected $_transaction_id;
+    protected $transactionId;
 
   /**
    * purchase_date
    *
    * @var Carbon
    */
-  protected $_purchase_date;
+    protected $purchaseDate;
 
   /**
    * cancellation_date
    *
    * @var Carbon
    */
-  protected $_cancellation_date;
+    protected $cancellationDate;
 
   /**
    * @return array
    */
-  public function getRawResponse()
-  {
-    return $this->_response;
-  }
+    public function getRawResponse()
+    {
+        return $this->response;
+    }
 
   /**
    * @return int
    */
-  public function getQuantity()
-  {
-    return $this->_quantity;
-  }
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
 
   /**
    * @return string
    */
-  public function getProductId()
-  {
-    return $this->_product_id;
-  }
+    public function getProductId()
+    {
+        return $this->productId;
+    }
 
   /**
    * @return string
    */
-  public function getTransactionId()
-  {
-    return $this->_transaction_id;
-  }
+    public function getTransactionId()
+    {
+        return $this->transactionId;
+    }
 
   /**
    * @return Carbon
    */
-  public function getPurchaseDate()
-  {
-    return $this->_purchase_date;
-  }
+    public function getPurchaseDate()
+    {
+        return $this->purchaseDate;
+    }
 
   /**
    * @return Carbon
    */
-  public function getCancellationDate()
-  {
-    return $this->_cancellation_date;
-  }
+    public function getCancellationDate()
+    {
+        return $this->cancellationDate;
+    }
 
   /**
    * Constructor
    *
    * @param array $jsonResponse
    */
-  public function __construct($jsonResponse = null)
-  {
-    $this->_response = $jsonResponse;
-    if ($this->_response !== null) {
-      $this->parseJsonResponse();
+    public function __construct($jsonResponse = null)
+    {
+        $this->response = $jsonResponse;
+        if ($this->response !== null) {
+            $this->parseJsonResponse();
+        }
     }
-  }
 
   /**
    * Parse JSON Response
@@ -116,33 +116,33 @@ class PurchaseItem
    * @return PurchaseItem
    * @throws RunTimeException
    */
-  public function parseJsonResponse()
-  {
-    $jsonResponse = $this->_response;
-    if (!is_array($jsonResponse)) {
-      throw new RuntimeException('Response must be a scalar value');
-    }
+    public function parseJsonResponse()
+    {
+        $jsonResponse = $this->response;
+        if (!is_array($jsonResponse)) {
+            throw new RuntimeException('Response must be a scalar value');
+        }
 
-    if (array_key_exists('quantity', $jsonResponse)) {
-      $this->_quantity = $jsonResponse['quantity'];
-    }
+        if (array_key_exists('quantity', $jsonResponse)) {
+            $this->quantity = $jsonResponse['quantity'];
+        }
 
-    if (array_key_exists('receiptId', $jsonResponse)) {
-      $this->_transaction_id = $jsonResponse['receiptId'];
-    }
+        if (array_key_exists('receiptId', $jsonResponse)) {
+            $this->transactionId = $jsonResponse['receiptId'];
+        }
 
-    if (array_key_exists('productId', $jsonResponse)) {
-      $this->_product_id = $jsonResponse['productId'];
-    }
+        if (array_key_exists('productId', $jsonResponse)) {
+            $this->productId = $jsonResponse['productId'];
+        }
 
-    if (array_key_exists('purchaseDate', $jsonResponse) && !empty($jsonResponse['purchaseDate'])) {
-      $this->_purchase_date = Carbon::createFromTimestampUTC(round($jsonResponse['purchaseDate'] / 1000));
-    }
+        if (array_key_exists('purchaseDate', $jsonResponse) && !empty($jsonResponse['purchaseDate'])) {
+            $this->purchaseDate = Carbon::createFromTimestampUTC(round($jsonResponse['purchaseDate'] / 1000));
+        }
 
-    if (array_key_exists('cancelDate', $jsonResponse) && !empty($jsonResponse['cancelDate'])) {
-      $this->_cancellation_date = Carbon::createFromTimestampUTC(round($jsonResponse['cancelDate'] / 1000));
-    }
+        if (array_key_exists('cancelDate', $jsonResponse) && !empty($jsonResponse['cancelDate'])) {
+            $this->cancellationDate = Carbon::createFromTimestampUTC(round($jsonResponse['cancelDate'] / 1000));
+        }
 
-    return $this;
-  }
+        return $this;
+    }
 }

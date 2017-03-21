@@ -1,58 +1,54 @@
 <?php
 namespace ReceiptValidator\Amazon;
 
+use ReceiptValidator\Abstracts\AbstractValidator;
 use ReceiptValidator\RunTimeException as RunTimeException;
 use GuzzleHttp\Exception\RequestException;
 
-class Validator
+class Validator extends AbstractValidator
 {
 
-  const ENDPOINT_SANDBOX = 'http://localhost:8080/RVSSandbox/';
-  const ENDPOINT_PRODUCTION = 'https://appstore-sdk.amazon.com/version/1.0/verifyReceiptId/';
+    const ENDPOINT_SANDBOX = 'http://localhost:8080/RVSSandbox/';
+    const ENDPOINT_PRODUCTION = 'https://appstore-sdk.amazon.com/version/1.0/verifyReceiptId/';
 
   /**
    * endpoint url
    *
    * @var string
    */
-  protected $_endpoint;
+    protected $endpoint;
 
   /**
    * Guzzle http client
    *
    * @var \GuzzleHttp\Client
    */
-  protected $_client = null;
+    protected $client = null;
 
 
   /**
    * @var string
    */
-  protected $_userId = null;
+    protected $userId = null;
 
   /**
    * @var string
    */
-  protected $_receiptId = null;
+    protected $developerSecret = null;
 
   /**
    * @var string
    */
-  protected $_developerSecret = null;
+    protected $productId = null;
 
-  /**
-   * @var string
-   */
-  protected $_product_id = null;
+    public function __construct($endpoint = self::ENDPOINT_PRODUCTION)
+    {
+        if ($endpoint != self::ENDPOINT_PRODUCTION && $endpoint != self::ENDPOINT_SANDBOX) {
+            throw new RunTimeException("Invalid endpoint '{$endpoint}'");
+        }
 
-  public function __construct($endpoint = self::ENDPOINT_PRODUCTION)
-  {
-    if ($endpoint != self::ENDPOINT_PRODUCTION && $endpoint != self::ENDPOINT_SANDBOX) {
-      throw new RunTimeException("Invalid endpoint '{$endpoint}'");
+        $this->endpoint = $endpoint;
     }
-
-    $this->_endpoint = $endpoint;
-  }
 
 
   /**
@@ -60,24 +56,12 @@ class Validator
    * @param string $userId
    * @return \ReceiptValidator\Amazon\Validator
    */
-  public function setUserId($userId)
-  {
-    $this->_userId = $userId;
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
 
-    return $this;
-  }
-
-  /**
-   *
-   * @param string $receiptId
-   * @return \ReceiptValidator\Amazon\Validator
-   */
-  public function setReceiptId($receiptId)
-  {
-    $this->_receiptId = $receiptId;
-
-    return $this;
-  }
+        return $this;
+    }
 
 
   /**
@@ -85,22 +69,22 @@ class Validator
    *
    * @return string
    */
-  public function getDeveloperSecret()
-  {
-    return $this->_developerSecret;
-  }
+    public function getDeveloperSecret()
+    {
+        return $this->developerSecret;
+    }
 
   /**
    *
    * @param int $developerSecret
    * @return \ReceiptValidator\Amazon\Validator
    */
-  public function setDeveloperSecret($developerSecret)
-  {
-    $this->_developerSecret = $developerSecret;
+    public function setDeveloperSecret($developerSecret)
+    {
+        $this->developerSecret = $developerSecret;
 
-    return $this;
-  }
+        return $this;
+    }
 
 
   /**
@@ -108,32 +92,39 @@ class Validator
    *
    * @return \GuzzleHttp\Client
    */
-  protected function getClient()
-  {
-    if ($this->_client == null) {
-      $this->_client = new \GuzzleHttp\Client(['base_uri' => $this->_endpoint]);
-    }
+    protected function getClient()
+    {
+        if ($this->client == null) {
+            $this->client = new \GuzzleHttp\Client(['base_uri' => $this->endpoint]);
+        }
 
-    return $this->_client;
-  }
+        return $this->client;
+    }
 
   /**
    * validate the receipt data
    *
    * @return Response
    */
-  public function validate()
-  {
-    try {
-      $httpResponse = $this->getClient()->request('GET', sprintf("developer/%s/user/%s/receiptId/%s", $this->_developerSecret, $this->_userId, $this->_receiptId));
+    public function validate()
+    {
+        try {
+            $params = sprintf(
+                "developer/%s/user/%s/receiptId/%s",
+                $this->developerSecret,
+                $this->userId,
+                $this->getPurchaseToken()
+            );
+            $httpResponse = $this->getClient()->request('GET', $params);
 
-      return new Response($httpResponse->getStatusCode(), json_decode($httpResponse->getBody(), true));
-    } catch (RequestException $e) {
-      if ($e->hasResponse()) {
-        return new Response($e->getResponse()->getStatusCode(), json_decode($e->getResponse()->getBody(), true));
-      }
+            return new Response($httpResponse->getStatusCode(), json_decode($httpResponse->getBody(), true));
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $body = $e->getResponse()->getBody();
+                return new Response($e->getResponse()->getStatusCode(), json_decode($body, true));
+            }
+        }
+
+        return new Response(Response::RESULT_INVALID_RECEIPT);
     }
-
-    return new Response(Response::RESULT_INVALID_RECEIPT);
-  }
 }

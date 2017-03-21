@@ -1,5 +1,5 @@
 {
-  "name": "sapfeer0k/store-receipt-validator",
+  "name": "kartina-tv/store-receipt-validator",
   "description": "PHP receipt validator for Apple iTunes, Google Play, Amazon App Store and Windows Store",
   "type": "library",
   "authors": [

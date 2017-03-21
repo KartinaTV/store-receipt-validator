@@ -1,7 +1,7 @@
 store-receipt-validator
 =======
 
-[![Build Status](https://travis-ci.org/aporat/store-receipt-validator.png?branch=master)](https://travis-ci.org/aporat/store-receipt-validator)
+[![Build Status](https://travis-ci.org/KartinaTV/store-receipt-validator.png?branch=master)](https://travis-ci.org/KartinaTV/store-receipt-validator)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/KartinaTV/store-receipt-validator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/KartinaTV/store-receipt-validator/badges/quality-score.png?b=master)
 
 PHP library that can be used to validate Amazon Store, Google Play, iTunes and Windows Store in app purchase receipts.
@@ -85,7 +85,7 @@ try {
   $response = $validator->setPackageName('PACKAGE_NAME')
     ->setProductId('PRODUCT_ID')
     ->setPurchaseToken('PURCHASE_TOKEN')
-    ->validatePurchase();
+    ->validate();
 } catch (Exception $e){
   var_dump($e->getMessage());
   // example message: Error calling GET ....: (404) Product not found for this application.
@@ -103,7 +103,11 @@ $validator = new AmazonValidator;
 
 $response = null;
 try {
-  $response = $validator->setDeveloperSecret("DEVELOPER_SECRET")->setReceiptId("RECEIPT_ID")->setUserId("USER_ID")->validate();
+  $response = $validator
+    ->setDeveloperSecret("DEVELOPER_SECRET")
+    ->setReceiptId("RECEIPT_ID")
+    ->setUserId("USER_ID")
+    ->validate();
 
 } catch (Exception $e) {
   echo 'got error = ' . $e->getMessage() . PHP_EOL;

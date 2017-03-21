@@ -15,7 +15,7 @@ class WindowsValidatorTest extends PHPUnit_Framework_TestCase
     {
         $validator = new Validator;
         $validator->setPurchaseToken($receipt);
-        $this->assertTrue($validator->validate(), 'Receipt should validate successfully');
+        $this->assertTrue($validator->validate()->isValid(), 'Receipt should validate successfully');
     }
 
     /**
@@ -25,7 +25,7 @@ class WindowsValidatorTest extends PHPUnit_Framework_TestCase
     {
         $validator = new Validator(new DummyCache);
         $validator->setPurchaseToken($receipt);
-        $this->assertTrue($validator->validate(), 'Receipt should validate successfully');
+        $this->assertTrue($validator->validate()->isValid(), 'Receipt should validate successfully');
     }
 
     public function testValidateFails()

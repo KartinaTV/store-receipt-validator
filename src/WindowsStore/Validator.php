@@ -20,7 +20,7 @@ class Validator extends AbstractValidator
      * Validate the given receipt.
      *
      * @param  string $receipt
-     * @return bool
+     * @return Response
      * @throws RunTimeException
      */
     public function validate()

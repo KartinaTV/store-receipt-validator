@@ -1,19 +1,22 @@
 <?php
+
+use PHPUnit\Framework\TestCase;
 use ReceiptValidator\Amazon\Validator as AmazonValidator;
-use ReceiptValidator\Amazon\Response;
 
 /**
  * @group library
+ *
+ * @internal
+ * @coversNothing
  */
-class AmazonValidatorTest extends PHPUnit_Framework_TestCase
+final class AmazonValidatorTest extends TestCase
 {
-
-  /**
-   * @var AmazonValidator
-   */
+    /**
+     * @var AmazonValidator
+     */
     private $validator;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -24,13 +27,13 @@ class AmazonValidatorTest extends PHPUnit_Framework_TestCase
     {
         $this->validator->setDeveloperSecret('SECRET');
 
-        $this->assertEquals('SECRET', $this->validator->getDeveloperSecret());
+        static::assertEquals('SECRET', $this->validator->getDeveloperSecret());
     }
 
     public function testValidateWithNoReceiptData()
     {
-        $response = $this->validator->setDeveloperSecret("NA")->setPurchaseToken("ID")->setUserId("ID")->validate();
+        $response = $this->validator->setDeveloperSecret('NA')->setPurchaseToken('ID')->setUserId('ID')->validate();
 
-        $this->assertFalse($response->isValid(), 'receipt must be invalid');
+        static::assertFalse($response->isValid(), 'receipt must be invalid');
     }
 }

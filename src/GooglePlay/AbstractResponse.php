@@ -2,10 +2,6 @@
 
 namespace ReceiptValidator\GooglePlay;
 
-/**
- * Class AbstractResponse
- * @package ReceiptValidator\GooglePlay
- */
 abstract class AbstractResponse extends \ReceiptValidator\Abstracts\AbstractResponse
 {
     const CONSUMPTION_STATE_YET_TO_BE_CONSUMED = 0;
@@ -24,8 +20,6 @@ abstract class AbstractResponse extends \ReceiptValidator\Abstracts\AbstractResp
     protected $developerPayload = [];
 
     /**
-     * Constructor
-     *
      * @param \Google_Model $response
      */
     public function __construct($response)
@@ -52,6 +46,7 @@ abstract class AbstractResponse extends \ReceiptValidator\Abstracts\AbstractResp
 
     /**
      * @param string $key
+     *
      * @return string
      */
     public function getDeveloperPayloadElement($key)

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sergei
- * Date: 20.03.17
- * Time: 16:09
- */
 
 namespace ReceiptValidator\Interfaces;
 

@@ -1,15 +1,20 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+use ReceiptValidator\RunTimeException;
+
 /**
  * @group library
+ *
+ * @internal
+ * @coversNothing
  */
-class ExceptionsTest extends \PHPUnit_Framework_TestCase
+final class ExceptionsTest extends TestCase
 {
-
     public function testRunTimeException()
     {
-        $e = new \ReceiptValidator\RunTimeException();
+        $e = new RunTimeException();
 
-        $this->assertInstanceOf("\ReceiptValidator\RunTimeException", $e);
+        static::assertInstanceOf(RunTimeException::class, $e);
     }
 }

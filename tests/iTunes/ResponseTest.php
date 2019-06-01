@@ -1,57 +1,63 @@
 <?php
+
+use PHPUnit\Framework\Constraint\IsType;
+use PHPUnit\Framework\TestCase;
 use ReceiptValidator\iTunes\Response;
+use ReceiptValidator\RunTimeException;
 
 /**
  * @group library
+ *
+ * @internal
+ * @coversNothing
  */
-class iTunesResponseTest extends PHPUnit_Framework_TestCase
+final class iTunesResponseTest extends TestCase
 {
-
     public function testInvalidOptionsToConstructor()
     {
-        $this->setExpectedException("ReceiptValidator\\RuntimeException", "Response must be a scalar value");
+        $this->expectException(RunTimeException::class);
 
         new Response('invalid');
     }
 
     public function testInvalidReceipt()
     {
-        $response = new Response(array('status' => Response::RESULT_DATA_MALFORMED, 'receipt' => array()));
+        $response = new Response(['status' => Response::RESULT_DATA_MALFORMED, 'receipt' => []]);
 
-        $this->assertFalse($response->isValid(), 'receipt must be invalid');
-        $this->assertEquals(Response::RESULT_DATA_MALFORMED, $response->getResultCode(), 'receipt result code must match');
+        static::assertFalse($response->isValid(), 'receipt must be invalid');
+        static::assertEquals(Response::RESULT_DATA_MALFORMED, $response->getResultCode(), 'receipt result code must match');
     }
 
     public function testReceiptSentToWrongEndpoint()
     {
-        $response = new Response(array('status' => Response::RESULT_SANDBOX_RECEIPT_SENT_TO_PRODUCTION));
+        $response = new Response(['status' => Response::RESULT_SANDBOX_RECEIPT_SENT_TO_PRODUCTION]);
 
-        $this->assertFalse($response->isValid(), 'receipt must be invalid');
-        $this->assertEquals(Response::RESULT_SANDBOX_RECEIPT_SENT_TO_PRODUCTION, $response->getResultCode(), 'receipt result code must match');
+        static::assertFalse($response->isValid(), 'receipt must be invalid');
+        static::assertEquals(Response::RESULT_SANDBOX_RECEIPT_SENT_TO_PRODUCTION, $response->getResultCode(), 'receipt result code must match');
     }
 
     public function testValidReceipt()
     {
-        $response = new Response(array('status' => Response::RESULT_OK, 'receipt' => array('testValue')));
+        $response = new Response(['status' => Response::RESULT_OK, 'receipt' => ['testValue']]);
 
-        $this->assertTrue($response->isValid(), 'receipt must be valid');
-        $this->assertEquals(Response::RESULT_OK, $response->getResultCode(), 'receipt result code must match');
+        static::assertTrue($response->isValid(), 'receipt must be valid');
+        static::assertEquals(Response::RESULT_OK, $response->getResultCode(), 'receipt result code must match');
     }
 
     public function testReceiptWithLatestReceiptInfo()
     {
-        $jsonResponseString = file_get_contents(__DIR__ . '/fixtures/inAppPurchaseResponse.json');
+        $jsonResponseString = file_get_contents(__DIR__.'/fixtures/inAppPurchaseResponse.json');
         $jsonResponseArray = json_decode($jsonResponseString, true);
 
         $response = new Response($jsonResponseArray);
 
-        $this->assertInternalType(PHPUnit_Framework_Constraint_IsType::TYPE_ARRAY, $response->getLatestReceiptInfo());
-        $this->assertEquals($jsonResponseArray['latest_receipt_info'], $response->getLatestReceiptInfo(), 'latest receipt info must match');
+        static::assertInternalType(IsType::TYPE_ARRAY, $response->getLatestReceiptInfo());
+        static::assertEquals($jsonResponseArray['latest_receipt_info'], $response->getLatestReceiptInfo(), 'latest receipt info must match');
 
-        $this->assertInternalType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $response->getLatestReceipt());
-        $this->assertEquals($jsonResponseArray['latest_receipt'], $response->getLatestReceipt(), 'latest receipt must match');
+        static::assertInternalType(IsType::TYPE_STRING, $response->getLatestReceipt());
+        static::assertEquals($jsonResponseArray['latest_receipt'], $response->getLatestReceipt(), 'latest receipt must match');
 
-        $this->assertInternalType(PHPUnit_Framework_Constraint_IsType::TYPE_STRING, $response->getBundleId());
-        $this->assertEquals($jsonResponseArray['receipt']['bundle_id'], $response->getBundleId(), 'receipt bundle id must match');
+        static::assertInternalType(IsType::TYPE_STRING, $response->getBundleId());
+        static::assertEquals($jsonResponseArray['receipt']['bundle_id'], $response->getBundleId(), 'receipt bundle id must match');
     }
 }

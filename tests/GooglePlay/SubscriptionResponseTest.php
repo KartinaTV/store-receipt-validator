@@ -2,14 +2,16 @@
 
 namespace ReceiptValidator\GooglePlay;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group library
+ *
+ * @internal
+ * @coversNothing
  */
-class GooglePlaySubscriptionResponseTest extends \PHPUnit_Framework_TestCase
+final class SubscriptionResponseTest extends TestCase
 {
-    /**
-     *
-     */
     public function testParsedResponse()
     {
         $autoRenewing = 'testAutoRenewing';
@@ -34,14 +36,14 @@ class GooglePlaySubscriptionResponseTest extends \PHPUnit_Framework_TestCase
 
         $subscriptionResponse = new SubscriptionResponse($subscriptionPurchaseMock);
 
-        $this->assertInstanceOf('ReceiptValidator\GooglePlay\AbstractResponse', $subscriptionResponse);
-        $this->assertEquals($autoRenewing, $subscriptionResponse->getAutoRenewing());
-        $this->assertEquals($cancelReason, $subscriptionResponse->getCancelReason());
-        $this->assertEquals($countryCode, $subscriptionResponse->getCountryCode());
-        $this->assertEquals($priceAmountMicros, $subscriptionResponse->getPriceAmountMicros());
-        $this->assertEquals($priceCurrencyCode, $subscriptionResponse->getPriceCurrencyCode());
-        $this->assertEquals($startTimeMillis, $subscriptionResponse->getStartTimeMillis());
-        $this->assertEquals($expiryTimeMillis, $subscriptionResponse->getExpiresDate());
-        $this->assertEquals($subscriptionPurchaseMock, $subscriptionResponse->getRawResponse());
+        static::assertInstanceOf('ReceiptValidator\GooglePlay\AbstractResponse', $subscriptionResponse);
+        static::assertEquals($autoRenewing, $subscriptionResponse->getAutoRenewing());
+        static::assertEquals($cancelReason, $subscriptionResponse->getCancelReason());
+        static::assertEquals($countryCode, $subscriptionResponse->getCountryCode());
+        static::assertEquals($priceAmountMicros, $subscriptionResponse->getPriceAmountMicros());
+        static::assertEquals($priceCurrencyCode, $subscriptionResponse->getPriceCurrencyCode());
+        static::assertEquals($startTimeMillis, $subscriptionResponse->getStartTimeMillis());
+        static::assertEquals($expiryTimeMillis, $subscriptionResponse->getExpiresDate());
+        static::assertEquals($subscriptionPurchaseMock, $subscriptionResponse->getRawResponse());
     }
 }

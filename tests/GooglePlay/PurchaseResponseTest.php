@@ -2,14 +2,16 @@
 
 namespace ReceiptValidator\GooglePlay;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group library
+ *
+ * @internal
+ * @coversNothing
  */
-class GooglePlayPurchaseResponseTest extends \PHPUnit_Framework_TestCase
+final class PurchaseResponseTest extends TestCase
 {
-    /**
-     *
-     */
     public function testParsedResponse()
     {
         $developerPayload = ['packageName' => 'testPackageName', 'etc' => 'testEtc'];
@@ -29,16 +31,16 @@ class GooglePlayPurchaseResponseTest extends \PHPUnit_Framework_TestCase
         $productResponse = new PurchaseResponse($productPurchaseMock);
 
         // test abstract methods
-        $this->assertInstanceOf('ReceiptValidator\GooglePlay\AbstractResponse', $productResponse);
-        $this->assertEquals(PurchaseResponse::CONSUMPTION_STATE_YET_TO_BE_CONSUMED, $productResponse->getConsumptionState());
-        $this->assertEquals($developerPayload, $productResponse->getDeveloperPayload());
-        $this->assertEquals($kind, $productResponse->getKind());
-        $this->assertEquals(PurchaseResponse::PURCHASE_STATE_CANCELED, $productResponse->getPurchaseState());
-        $this->assertEquals($developerPayload['packageName'], $productResponse->getDeveloperPayloadElement('packageName'));
-        $this->assertEquals($developerPayload['etc'], $productResponse->getDeveloperPayloadElement('etc'));
-        $this->assertEquals('', $productResponse->getDeveloperPayloadElement('invalid'));
+        static::assertInstanceOf('ReceiptValidator\GooglePlay\AbstractResponse', $productResponse);
+        static::assertEquals(PurchaseResponse::CONSUMPTION_STATE_YET_TO_BE_CONSUMED, $productResponse->getConsumptionState());
+        static::assertEquals($developerPayload, $productResponse->getDeveloperPayload());
+        static::assertEquals($kind, $productResponse->getKind());
+        static::assertEquals(PurchaseResponse::PURCHASE_STATE_CANCELED, $productResponse->getPurchaseState());
+        static::assertEquals($developerPayload['packageName'], $productResponse->getDeveloperPayloadElement('packageName'));
+        static::assertEquals($developerPayload['etc'], $productResponse->getDeveloperPayloadElement('etc'));
+        static::assertEquals('', $productResponse->getDeveloperPayloadElement('invalid'));
         // test own methods
-        $this->assertEquals($purchaseTimeMillis, $productResponse->getPurchaseTimeMillis());
-        $this->assertEquals($productPurchaseMock, $productResponse->getRawResponse());
+        static::assertEquals($purchaseTimeMillis, $productResponse->getPurchaseTimeMillis());
+        static::assertEquals($productPurchaseMock, $productResponse->getRawResponse());
     }
 }

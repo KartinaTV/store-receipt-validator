@@ -9,7 +9,7 @@ PHP library that can be used to validate Amazon Store, Google Play, iTunes and W
 
 ## Requirements ##
 
-* PHP >= 5.5
+* PHP >= 7.1
 
 ## Getting Started ##
 

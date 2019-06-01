@@ -1,4 +1,5 @@
 <?php
+
 namespace ReceiptValidator\WindowsStore;
 
 use DOMDocument;
@@ -17,18 +18,16 @@ class Validator extends AbstractValidator
     }
 
     /**
-     * Validate the given receipt.
-     *
-     * @param  string $receipt
-     * @return Response
      * @throws RunTimeException
+     *
+     * @return Response
      */
     public function validate()
     {
         // Load the receipt that needs to verified as an XML document.
         $receipt = $this->getPurchaseToken();
-        $dom = new \DOMDocument;
-        if (@$dom->loadXML($receipt) === false) {
+        $dom = new \DOMDocument();
+        if (false === @$dom->loadXML($receipt)) {
             throw new RunTimeException('Invalid XML');
         }
 
@@ -42,29 +41,28 @@ class Validator extends AbstractValidator
         $certificate = $this->retrieveCertificate($certificateId);
 
         $isValid = $this->validateXml($dom, $certificate);
-        $response = Response::factory($dom, $isValid);
-        return $response;
+
+        return Response::factory($dom, $isValid);
     }
 
     /**
-     * Load the certificate with the given ID.
+     * @param string $certificateId
      *
-     * @param  string $certificateId
      * @return resource
      */
     protected function retrieveCertificate($certificateId)
     {
         // Retrieve from cache if a cache handler has been set.
-        $cacheKey = 'store-receipt-validate.windowsstore.' . $certificateId;
-        $certificate = $this->cache !== null ? $this->cache->get($cacheKey) : null;
+        $cacheKey = 'store-receipt-validate.windowsstore.'.$certificateId;
+        $certificate = null !== $this->cache ? $this->cache->get($cacheKey) : null;
 
-        if ($certificate === null) {
+        if (null === $certificate) {
             $maxCertificateSize = 10000;
 
             // We are attempting to retrieve the following url. The getAppReceiptAsync website at
             // http://msdn.microsoft.com/en-us/library/windows/apps/windows.applicationmodel.store.currentapp.getappreceiptasync.aspx
             // lists the following format for the certificate url.
-            $certificateUrl = '/fwlink/?LinkId=246509&cid=' . $certificateId;
+            $certificateUrl = '/fwlink/?LinkId=246509&cid='.$certificateId;
 
             // Make an HTTP GET request for the certificate.
             $client = new \GuzzleHttp\Client(['base_uri' => 'https://go.microsoft.com']);
@@ -74,7 +72,7 @@ class Validator extends AbstractValidator
             $certificate = $response->getBody();
 
             // Write back to cache.
-            if ($this->cache !== null) {
+            if (null !== $this->cache) {
                 $this->cache->put($cacheKey, $certificate, 3600);
             }
         }
@@ -83,22 +81,19 @@ class Validator extends AbstractValidator
     }
 
     /**
-     * Validate the receipt contained in the given XML element using the
-     * certificate provided.
-     *
-     * @param  DOMDocument $dom
-     * @param  resource $certificate
+     * @param resource $certificate
      *
      * @throws RunTimeException
+     *
      * @return bool
      */
     protected function validateXml(DOMDocument $dom, $certificate)
     {
-        $secDsig = new XMLSecurityDSig;
+        $secDsig = new XMLSecurityDSig();
 
         // Locate the signature in the receipt XML.
         $dsig = $secDsig->locateSignature($dom);
-        if ($dsig === null) {
+        if (null === $dsig) {
             throw new RunTimeException('Cannot locate receipt signature');
         }
 
@@ -113,7 +108,7 @@ class Validator extends AbstractValidator
         }
 
         $key = $secDsig->locateKey();
-        if ($key === null) {
+        if (null === $key) {
             throw new RunTimeException('Could not locate key in receipt');
         }
 
@@ -122,6 +117,6 @@ class Validator extends AbstractValidator
             $key->loadKey($certificate);
         }
 
-        return $secDsig->verify($key) == 1;
+        return 1 == $secDsig->verify($key);
     }
 }

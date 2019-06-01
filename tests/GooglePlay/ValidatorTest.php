@@ -2,14 +2,16 @@
 
 namespace ReceiptValidator\GooglePlay;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @group library
+ *
+ * @internal
+ * @coversNothing
  */
-class GooglePlayValidatorTest extends \PHPUnit_Framework_TestCase
+final class ValidatorTest extends TestCase
 {
-    /**
-     *
-     */
     public function testValidate()
     {
         $package = 'testPackage';
@@ -32,19 +34,20 @@ class GooglePlayValidatorTest extends \PHPUnit_Framework_TestCase
         $googleServiceAndroidPublisherMock->purchases_products = $productPurchaseMock;
         $googleServiceAndroidPublisherMock->purchases_subscriptions = $subscriptionPurchaseMock;
 
-        $productPurchaseMock->expects($this->once())->method('get')
+        $productPurchaseMock->expects(static::once())->method('get')
             ->with($package, $productId, $purchaseToken)->willReturn($productResponseMock);
 
-        $subscriptionPurchaseMock->expects($this->once())->method('get')
+        $subscriptionPurchaseMock->expects(static::once())->method('get')
             ->with($package, $productId, $purchaseToken)->willReturn($subscriptionResponseMock);
 
         $googlePlayValidator = (new Validator($googleServiceAndroidPublisherMock))
             ->setPackageName($package)
             ->setProductId($productId)
-            ->setPurchaseToken($purchaseToken);
+            ->setPurchaseToken($purchaseToken)
+        ;
 
-        $this->assertEquals(new PurchaseResponse($productResponseMock), $googlePlayValidator->validatePurchase());
-        $this->assertEquals(new SubscriptionResponse($subscriptionResponseMock), $googlePlayValidator
+        static::assertEquals(new PurchaseResponse($productResponseMock), $googlePlayValidator->validatePurchase());
+        static::assertEquals(new SubscriptionResponse($subscriptionResponseMock), $googlePlayValidator
             ->setValidationModePurchase(false)->validateSubscription());
     }
 }

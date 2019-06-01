@@ -1,4 +1,5 @@
 <?php
+
 namespace ReceiptValidator\iTunes;
 
 use ReceiptValidator\Abstracts\AbstractResponse;
@@ -7,8 +8,6 @@ use ReceiptValidator\RunTimeException;
 class Response extends AbstractResponse
 {
     /**
-     * Response Codes
-     *
      * @var int
      */
     const RESULT_OK = 0;
@@ -45,77 +44,65 @@ class Response extends AbstractResponse
     const RESULT_PRODUCTION_RECEIPT_SENT_TO_SANDBOX = 21008;
 
     /**
-     * Result Code
-     *
      * @var int
      */
     protected $code;
 
     /**
-     * bundle_id (app) belongs to the receipt
+     * bundle_id (app) belongs to the receipt.
      *
      * @var string
      */
     protected $bundleId;
 
     /**
-     * receipt info
-     *
      * @var array
      */
     protected $receipt = [];
 
     /**
-     * latest receipt (needs for auto-renewable subscriptions)
-     *
      * @var string
      */
     protected $latestReceipt;
 
     /**
-     * latest receipt info (needs for auto-renewable subscriptions)
-     *
      * @var array
      */
     protected $latestReceiptInfo;
 
     /**
-     * purchases info
      * @var PurchaseItem[]
      */
     protected $purchases = [];
 
     /**
-     * Constructor
-     *
      * @param array $jsonResponse
      */
     public function __construct($jsonResponse = null)
     {
         $this->response = $jsonResponse;
-        if ($this->response !== null) {
+        if (null !== $this->response) {
             $this->parseJsonResponse();
         }
     }
 
     /**
-     * Parse JSON Response
+     * @throws RunTimeException
      *
      * @return Response
-     * @throws RunTimeException
      */
     public function parseJsonResponse()
     {
         $jsonResponse = $this->response;
-        if (!is_array($jsonResponse)) {
+        if (!\is_array($jsonResponse)) {
             throw new RunTimeException('Response must be a scalar value');
         }
 
         // ios > 7 receipt validation
-        if (array_key_exists('receipt', $jsonResponse)
-            && is_array($jsonResponse['receipt'])
-            && array_key_exists('in_app', $jsonResponse['receipt'])
-            && is_array($jsonResponse['receipt']['in_app'])
+        if (\array_key_exists('receipt', $jsonResponse)
+            && \is_array($jsonResponse['receipt'])
+            && \array_key_exists('in_app', $jsonResponse['receipt'])
+            && \is_array($jsonResponse['receipt']['in_app'])
         ) {
             $this->code = $jsonResponse['status'];
             $this->receipt = $jsonResponse['receipt'];
@@ -126,41 +113,40 @@ class Response extends AbstractResponse
                 $this->purchases[] = new PurchaseItem($purchase_item_data);
             }
 
-            if (array_key_exists('bundle_id', $jsonResponse['receipt'])) {
+            if (\array_key_exists('bundle_id', $jsonResponse['receipt'])) {
                 $this->bundleId = $jsonResponse['receipt']['bundle_id'];
             }
 
-            if (array_key_exists('latest_receipt_info', $jsonResponse)) {
+            if (\array_key_exists('latest_receipt_info', $jsonResponse)) {
                 $this->latestReceiptInfo = $jsonResponse['latest_receipt_info'];
             }
 
-            if (array_key_exists('latest_receipt', $jsonResponse)) {
+            if (\array_key_exists('latest_receipt', $jsonResponse)) {
                 $this->latestReceipt = $jsonResponse['latest_receipt'];
             }
-        } elseif (array_key_exists('receipt', $jsonResponse)) {
+        } elseif (\array_key_exists('receipt', $jsonResponse)) {
             // ios <= 6.0 validation
             $this->code = $jsonResponse['status'];
 
-            if (array_key_exists('receipt', $jsonResponse)) {
+            if (\array_key_exists('receipt', $jsonResponse)) {
                 $this->receipt = $jsonResponse['receipt'];
                 $this->purchases = [];
                 $this->purchases[] = new PurchaseItem($jsonResponse['receipt']);
 
-                if (array_key_exists('bid', $jsonResponse['receipt'])) {
+                if (\array_key_exists('bid', $jsonResponse['receipt'])) {
                     $this->bundleId = $jsonResponse['receipt']['bid'];
                 }
             }
-        } elseif (array_key_exists('status', $jsonResponse)) {
+        } elseif (\array_key_exists('status', $jsonResponse)) {
             $this->code = $jsonResponse['status'];
         } else {
             $this->code = self::RESULT_DATA_MALFORMED;
         }
+
         return $this;
     }
 
     /**
-     * Get Result Code
-     *
      * @return int
      */
     public function getResultCode()
@@ -169,9 +155,8 @@ class Response extends AbstractResponse
     }
 
     /**
-     * Set Result Code
-     *
      * @param int $code
+     *
      * @return Response
      */
     public function setResultCode($code)
@@ -182,8 +167,6 @@ class Response extends AbstractResponse
     }
 
     /**
-     * Get purchases info
-     *
      * @return PurchaseItem[]
      */
     public function getPurchases()
@@ -192,8 +175,6 @@ class Response extends AbstractResponse
     }
 
     /**
-     * Get receipt info
-     *
      * @return array
      */
     public function getReceipt()
@@ -202,8 +183,6 @@ class Response extends AbstractResponse
     }
 
     /**
-     * Get latest receipt info
-     *
      * @return array
      */
     public function getLatestReceiptInfo()
@@ -212,8 +191,6 @@ class Response extends AbstractResponse
     }
 
     /**
-     * Get latest receipt
-     *
      * @return string
      */
     public function getLatestReceipt()
@@ -222,8 +199,6 @@ class Response extends AbstractResponse
     }
 
     /**
-     * Get the bundle id associated with the receipt
-     *
      * @return string
      */
     public function getBundleId()
@@ -232,13 +207,10 @@ class Response extends AbstractResponse
     }
 
     /**
-     * returns if the receipt is valid or not
-     *
-     * @return boolean
+     * @return bool
      */
     public function isValid()
     {
-        return ($this->code == self::RESULT_OK);
+        return self::RESULT_OK == $this->code;
     }
 }
-

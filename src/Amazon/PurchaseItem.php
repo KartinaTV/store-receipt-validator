@@ -1,145 +1,125 @@
 <?php
+
 namespace ReceiptValidator\Amazon;
 
-use ReceiptValidator\RunTimeException;
 use Carbon\Carbon;
+use ReceiptValidator\RunTimeException;
 
 class PurchaseItem
 {
-
-  /**
-   * purchase item info
-   *
-   * @var array
-   */
+    /**
+     * @var array
+     */
     protected $response;
 
-  /**
-   * quantity
-   *
-   * @var int
-   */
+    /**
+     * @var int
+     */
     protected $quantity;
 
-  /**
-   * product_id
-   *
-   * @var string
-   */
+    /**
+     * @var string
+     */
     protected $productId;
 
-  /**
-   * transaction_id
-   *
-   * @var string
-   */
+    /**
+     * @var string
+     */
     protected $transactionId;
 
-  /**
-   * purchase_date
-   *
-   * @var Carbon
-   */
+    /**
+     * @var Carbon
+     */
     protected $purchaseDate;
 
-  /**
-   * cancellation_date
-   *
-   * @var Carbon
-   */
+    /**
+     * @var Carbon
+     */
     protected $cancellationDate;
 
-  /**
-   * @return array
-   */
+    /**
+     * @param array $jsonResponse
+     */
+    public function __construct($jsonResponse = null)
+    {
+        $this->response = $jsonResponse;
+        if (null !== $this->response) {
+            $this->parseJsonResponse();
+        }
+    }
+
+    /**
+     * @return array
+     */
     public function getRawResponse()
     {
         return $this->response;
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function getQuantity()
     {
         return $this->quantity;
     }
 
-  /**
-   * @return string
-   */
+    /**
+     * @return string
+     */
     public function getProductId()
     {
         return $this->productId;
     }
 
-  /**
-   * @return string
-   */
+    /**
+     * @return string
+     */
     public function getTransactionId()
     {
         return $this->transactionId;
     }
 
-  /**
-   * @return Carbon
-   */
+    /**
+     * @return Carbon
+     */
     public function getPurchaseDate()
     {
         return $this->purchaseDate;
     }
 
-  /**
-   * @return Carbon
-   */
+    /**
+     * @return Carbon
+     */
     public function getCancellationDate()
     {
         return $this->cancellationDate;
     }
 
-  /**
-   * Constructor
-   *
-   * @param array $jsonResponse
-   */
-    public function __construct($jsonResponse = null)
-    {
-        $this->response = $jsonResponse;
-        if ($this->response !== null) {
-            $this->parseJsonResponse();
-        }
-    }
-
-  /**
-   * Parse JSON Response
-   *
-   * @return PurchaseItem
-   * @throws RunTimeException
-   */
+    /**
+     * @throws RunTimeException
+     *
+     * @return PurchaseItem
+     */
     public function parseJsonResponse()
     {
         $jsonResponse = $this->response;
-        if (!is_array($jsonResponse)) {
+        if (!\is_array($jsonResponse)) {
             throw new RuntimeException('Response must be a scalar value');
         }
-
-        if (array_key_exists('quantity', $jsonResponse)) {
+        if (\array_key_exists('quantity', $jsonResponse)) {
             $this->quantity = $jsonResponse['quantity'];
         }
-
-        if (array_key_exists('receiptId', $jsonResponse)) {
+        if (\array_key_exists('receiptId', $jsonResponse)) {
             $this->transactionId = $jsonResponse['receiptId'];
         }
-
-        if (array_key_exists('productId', $jsonResponse)) {
+        if (\array_key_exists('productId', $jsonResponse)) {
             $this->productId = $jsonResponse['productId'];
         }
-
-        if (array_key_exists('purchaseDate', $jsonResponse) && !empty($jsonResponse['purchaseDate'])) {
+        if (\array_key_exists('purchaseDate', $jsonResponse) && !empty($jsonResponse['purchaseDate'])) {
             $this->purchaseDate = Carbon::createFromTimestampUTC(round($jsonResponse['purchaseDate'] / 1000));
         }
-
-        if (array_key_exists('cancelDate', $jsonResponse) && !empty($jsonResponse['cancelDate'])) {
+        if (\array_key_exists('cancelDate', $jsonResponse) && !empty($jsonResponse['cancelDate'])) {
             $this->cancellationDate = Carbon::createFromTimestampUTC(round($jsonResponse['cancelDate'] / 1000));
         }
 

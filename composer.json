@@ -1,56 +1,58 @@
 {
-  "name": "kartina-tv/store-receipt-validator",
-  "description": "PHP receipt validator for Apple iTunes, Google Play, Amazon App Store and Windows Store",
-  "type": "library",
-  "authors": [
-    {
-      "name": "Adar Porat",
-      "email": "adar.porat@gmail.com",
-      "homepage": "https://github.com/aporat"
+    "name": "kartina-tv/store-receipt-validator",
+    "description": "PHP receipt validator for Apple iTunes, Google Play, Amazon App Store and Windows Store",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Adar Porat",
+            "email": "adar.porat@gmail.com",
+            "homepage": "https://github.com/aporat"
+        },
+        {
+            "name": "Stanimir Kukudov",
+            "email": "stanimir.kukudov@gmail.com",
+            "homepage": "https://github.com/stanimir-kukudov"
+        },
+        {
+            "name": "Sergei Lomakov",
+            "email": "sergei@lomakov.net",
+            "homepage": "https://github.com/sapfeer0k"
+        }
+    ],
+    "keywords": [
+        "itunes",
+        "apple",
+        "amazon",
+        "google",
+        "play market",
+        "windows store",
+        "in app",
+        "purchase",
+        "receipt"
+    ],
+    "homepage": "https://github.com/KartinaTV/store-receipt-validator",
+    "license": [
+        "Apache-2.0"
+    ],
+    "require": {
+        "php": "^7.1",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "guzzlehttp/guzzle": "^6.3",
+        "nesbot/carbon": "^2.19",
+        "google/apiclient": "^2.2",
+        "robrichards/xmlseclibs": "^3.0"
     },
-    {
-      "name": "Stanimir Kukudov",
-      "email": "stanimir.kukudov@gmail.com",
-      "homepage": "https://github.com/stanimir-kukudov"
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
     },
-    {
-      "name": "Sergei Lomakov",
-      "email": "sergei@lomakov.net",
-      "homepage": "https://github.com/sapfeer0k"
+    "autoload": {
+        "psr-4": {
+            "ReceiptValidator\\": "src/"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/KartinaTV/store-receipt-validator/issues"
     }
-  ],
-  "keywords": [
-    "itunes",
-    "apple",
-    "amazon",
-    "google",
-    "play market",
-    "windows store",
-    "in app",
-    "purchase",
-    "receipt"
-  ],
-  "homepage": "https://github.com/KartinaTV/store-receipt-validator",
-  "license": [
-    "Apache-2.0"
-  ],
-  "require": {
-    "php": ">=5.6",
-    "guzzlehttp/guzzle": "~6.2",
-    "nesbot/carbon": "~1",
-    "google/apiclient": "~2.0",
-    "robrichards/xmlseclibs": "^2.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^5.7",
-    "bamboohr/phpcs": "^0.1.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "ReceiptValidator\\": "src/"
-    }
-  },
-  "support": {
-    "issues": "https://github.com/KartinaTV/store-receipt-validator/issues"
-  }
 }
